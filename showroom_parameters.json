@@ -1,0 +1,14 @@
+[
+  {
+    "ParameterKey": "InstanceTypeParameter",
+    "ParameterValue": "t2.medium"
+  },
+  {
+    "ParameterKey": "InstanceKeyParameter",
+    "ParameterValue": "m_minaie_showroom"
+  },
+    {
+    "ParameterKey": "InstanceSecurityGroupParameter",
+    "ParameterValue": "sg-0cc6134e03bf7289f,sg-0678b5a9c4b109bfe,sg-086c8aaec7aeecfd4"
+  }
+]

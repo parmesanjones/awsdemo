@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  Demo template for showroom to launch Atlassian ec2 instance/s.
+Parameters:
+  InstanceTypeParameter:
+    Type: String
+    Default: t2.medium
+    AllowedValues:
+      - t2.medium
+      - t3.medium
+      - t3.large
+    Description: >
+      Select t2.medium, t3.medium, or t3.large.  Default is t2.medium (t3.medium
+      appears cheaper for same). See
+      https://aws.amazon.com/ec2/pricing/on-demand/ to make an informed choice.
+  InstanceKeyParameter:
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    Default: m_minaie_showroom
+    Description: |
+      Select an EC2 key pair to launch with your instance.
+  InstanceSecurityGroupParameter:
+    Type: 'List<AWS::EC2::SecurityGroup::Id>'
+    Description: |
+      Select a security group to launch with your instance.
+Resources:
+  showroomInstance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: !Ref InstanceTypeParameter
+      ImageId: ami-07ed0cd54729b2918
+      KeyName: !Ref InstanceKeyParameter
+      SecurityGroupIds: !Ref InstanceSecurityGroupParameter
+      Tags:
+        - 
+          Key: Name
+          Value: Test
+        -
+          Key: Environment
+          Value: DevTest
+        -
+          Key: Project
+          Value: showroom
+      UserData: 
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          yum update -y
+
+
+
