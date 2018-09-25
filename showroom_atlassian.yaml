@@ -2,9 +2,9 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: |
   Demo template for showroom to launch Atlassian ec2 instance/s.
 Parameters:
-  InstanceTypeParameter: # specify instance size options
+  InstanceTypeParameter:
     Type: String
-    Default: t2.medium # set default instance size
+    Default: t2.medium
     AllowedValues:
       - t2.medium
       - t3.medium
@@ -13,41 +13,40 @@ Parameters:
       Select t2.medium, t3.medium, or t3.large.  Default is t2.medium (t3.medium
       appears cheaper for same). See
       https://aws.amazon.com/ec2/pricing/on-demand/ to make an informed choice.
-  InstanceKeyParameter: #using Mo's key to launch instance
+  InstanceKeyParameter:
     Type: 'AWS::EC2::KeyPair::KeyName'
     Default: m_minaie_showroom
     Description: |
       Select an EC2 key pair to launch with your instance.
-  InstanceSecurityGroupParameter: #attach security groups to instance
+  InstanceSecurityGroupParameter:
     Type: 'List<AWS::EC2::SecurityGroup::Id>'
     Description: |
       Select a security group to launch with your instance.
-Resources: 
+Resources:
   showroomInstance:
     Type: 'AWS::EC2::Instance'
     Properties:
-      InstanceType: !Ref InstanceTypeParameter # defined in parameters
-      ImageId: ami-07ed0cd54729b2918 # build off specific image
-      KeyName: !Ref InstanceKeyParameter # defined in parametres
-      IamInstanceProfile: s3_read # allows read and ssm updateinstance..
+      InstanceType: !Ref InstanceTypeParameter
+      ImageId: ami-07ed0cd54729b2918
+      KeyName: !Ref InstanceKeyParameter
+      IamInstanceProfile: s3_read
       SecurityGroupIds: !Ref InstanceSecurityGroupParameter
-      Tags: # use these tags - could move to file input
+      Tags:
         - 
           Key: Name
-          Value: Test
+          Value: showroomDemo
         -
           Key: Environment
           Value: DevTest
         -
           Key: Project
           Value: showroom
-      # below updates, pulls docker containers from s3, and launches
+        -
+          Key: Component
+          Value: Impact
       UserData: 
         Fn::Base64: !Sub |
-          #!/bin/bash -xe
+          #!/usr/bin/env bash -xe
           yum update -y
           aws s3 sync s3://showroomdocker/ /home/ec2-user/
           (cd /home/ec2-user/atlassianDocker/ && dc up -d)
-
-
-
