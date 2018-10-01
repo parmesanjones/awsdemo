@@ -47,6 +47,8 @@ Resources:
       UserData: 
         Fn::Base64: !Sub |
           #!/bin/bash -xe
-          yum update -y
-          aws s3 sync s3://showroomdocker/ /home/ec2-user/
-          (cd /home/ec2-user/atlassianDocker/ && dc up -d)
+          date > /home/ec2-user/timer.txt
+          yum update -y 
+          (cd /home/ec2-user && aws s3 cp s3://showroomdocker/down/s3cp-down.tar.gz - | tar -xz)
+          sudo -H -u ec2-user bash -c '(cd /home/ec2-user/atlassianDocker/atlassianDocker/ && /usr/local/bin/docker-compose up -d)'
+          date >> /home/ec2-user/timer.txt
