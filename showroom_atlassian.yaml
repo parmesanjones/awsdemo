@@ -27,7 +27,7 @@ Resources:
     Type: 'AWS::EC2::Instance'
     Properties:
       InstanceType: !Ref InstanceTypeParameter
-      ImageId: ami-06d7481141d035c69
+      ImageId: ami-0b727fc43dd53a80b
       KeyName: !Ref InstanceKeyParameter
       IamInstanceProfile: s3_read
       SecurityGroupIds: !Ref InstanceSecurityGroupParameter
