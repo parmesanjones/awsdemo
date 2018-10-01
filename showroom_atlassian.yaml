@@ -27,7 +27,7 @@ Resources:
     Type: 'AWS::EC2::Instance'
     Properties:
       InstanceType: !Ref InstanceTypeParameter
-      ImageId: ami-07ed0cd54729b2918
+      ImageId: ami-06d7481141d035c69
       KeyName: !Ref InstanceKeyParameter
       IamInstanceProfile: s3_read
       SecurityGroupIds: !Ref InstanceSecurityGroupParameter
@@ -46,7 +46,7 @@ Resources:
           Value: Impact
       UserData: 
         Fn::Base64: !Sub |
-          #!/usr/bin/env bash -xe
+          #!/bin/bash -xe
           yum update -y
           aws s3 sync s3://showroomdocker/ /home/ec2-user/
           (cd /home/ec2-user/atlassianDocker/ && dc up -d)

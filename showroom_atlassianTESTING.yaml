@@ -27,7 +27,7 @@ Resources:
     Type: 'AWS::EC2::Instance'
     Properties:
       InstanceType: !Ref InstanceTypeParameter
-      ImageId: ami-07ed0cd54729b2918
+      ImageId: ami-0b727fc43dd53a80b
       KeyName: !Ref InstanceKeyParameter
       IamInstanceProfile: s3_read
       SecurityGroupIds: !Ref InstanceSecurityGroupParameter
@@ -46,10 +46,14 @@ Resources:
           Value: Impact
       UserData: 
         Fn::Base64: !Sub |
-          #!/usr/bin/env bash -xe
+          #!/bin/bash -xe
+          date > /home/ec2-user/timing.txt #print time before update
           yum update -y
-          aws s3 sync s3://showroomdocker/ /home/ec2-user/
-          (cd /home/ec2-user/atlassianDocker/ && dc up -d)
+          aws s3 cp s3://showroomdocker/down/s3cp-down.tar.gz /home/ec2-user/
+          su ec2-user -c '(cd /home/ec2-user/ && tar -xvf /home/ec2-user/s3cp-down.tar.gz)'
+          sudo -H -u ec2-user bash -c '(cd /home/ec2-user/atlassianDocker/atlassianDocker/ && /usr/local/bin/docker-compose up -d)'
+          rm -rf /home/ec2-user/s3cp-down.tar.gz
+          date >> /home/ec2-user/timing.txt #print time after finished
 
 
 
